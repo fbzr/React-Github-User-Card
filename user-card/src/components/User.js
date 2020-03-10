@@ -13,6 +13,10 @@ export default class User extends Component {
         }
     }
     
+    componentDidMount() {
+        console.log(this.props.user)
+    }
+
     async componentDidUpdate(prevProps, prevState) {
         if( prevProps !== this.props ) {
             try {
@@ -37,7 +41,7 @@ export default class User extends Component {
     render() {
         const {name, login, avatar_url, location, followers, following, blog, bio} = this.props.user;
         return ( followers 
-            ? <Card style={{maxWidth: '500px'}}>
+            ? <Card style={{width: '100%'}}>
                 <CardHeader 
                     avatar={
                         <Avatar style={{width: '100px', height: '100px'}} src={avatar_url} alt={name} />    
@@ -47,10 +51,12 @@ export default class User extends Component {
                 />
                 <CardContent>
                     { bio && (
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        {bio}
+                    <Fragment>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                            {bio}
+                        </Typography>
                         <Divider style={{margin: '8px 0'}} />
-                    </Typography>
+                    </Fragment>
                     )}
                     { blog && (
                     <Typography variant="body2" color="textSecondary" component="p">
@@ -64,7 +70,7 @@ export default class User extends Component {
                         {`Following: ${following}`}
                     </Typography>
                 </CardContent>
-                { (this.state.followers.length > 0) && <FollowersCollapse handleExpand={this.handleExpand} expanded={this.state.expanded} followers={this.state.followers} /> }
+                { (this.state.followers.length > 0) && <FollowersCollapse changeUser={this.props.changeUser} handleExpand={this.handleExpand} expanded={this.state.expanded} followers={this.state.followers} /> }
             </Card> 
             : null
         )

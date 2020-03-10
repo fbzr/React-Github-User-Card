@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Grid, CardContent, Typography, Collapse, CardActions, IconButton } from '@material-ui/core';
-import { ExpandMore } from '@material-ui/icons';
+import { ExpandMore, ExpandLess } from '@material-ui/icons';
 import Follower from './Follower';
 
 export default class FollowersCollapse extends Component {
@@ -14,7 +14,7 @@ export default class FollowersCollapse extends Component {
                         <Typography variant="body2" color="textSecondary" component="p">
                                 Followers:
                         </Typography>
-                        <ExpandMore />
+                        { expanded ? <ExpandLess /> : <ExpandMore /> }
                     </IconButton>
                 </CardActions>
                 
@@ -22,7 +22,9 @@ export default class FollowersCollapse extends Component {
                     <CardContent>
                         <Grid container display='flex'>
                             { followers.map(follower => (
-                                <Follower key={follower.login} follower={follower} />
+                                <Grid item key={follower.login} style={{width: '50%'}}>
+                                    <Follower changeUser={this.props.changeUser} follower={follower} />
+                                </Grid>
                             )) }
                         </Grid>
                     </CardContent>
