@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import User from './components/User';
+import { Grid } from '@material-ui/core';
 
 export default class App extends Component {
   constructor() {
@@ -25,9 +26,9 @@ export default class App extends Component {
 
   render() {
     return (
-      <div>
+      <Grid container justify='center'>
         <User user={this.state.userData} />
-      </div>
+      </Grid>
     )
   }
 }

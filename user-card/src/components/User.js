@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import { Card, CardHeader, Avatar } from '@material-ui/core';
+import React, { Component, Fragment } from 'react';
+import { Card, CardHeader, CardContent, Avatar, Typography, Divider, Collapse, CardActions, IconButton } from '@material-ui/core';
+import FollowersCollapse from './FollowersCollapse';
 import axios from 'axios';
 
 export default class User extends Component {
@@ -7,37 +8,65 @@ export default class User extends Component {
     constructor() {
         super();
         this.state = {
-            followers: []
+            followers: [],
+            expanded: false
         }
     }
     
-    async componentDidMount() {
-        try {
-            const res = await axios.get(`https://api.github.com/users/${this.props.user.login}/followers`);
-            this.setState({
-                followers: res.data
-            })
-        } catch(err) {
-            console.log(err);
+    async componentDidUpdate(prevProps, prevState) {
+        if( prevProps !== this.props ) {
+            try {
+                const res = await axios.get(`https://api.github.com/users/${this.props.user.login}/followers`);
+                this.setState({
+                    ...this.state,
+                    followers: res.data
+                })
+            } catch(err) {
+                console.log(err);
+            }
         }
+    }
+
+    handleExpand = e => {
+        this.setState({
+            ...this.state,
+            expanded: !this.state.expanded
+        })
     }
     
     render() {
-        const {name, login, avatar_url, location, followers, following} = this.props.user;
-        return (
-            <Card>
+        const {name, login, avatar_url, location, followers, following, blog, bio} = this.props.user;
+        return ( followers 
+            ? <Card style={{maxWidth: '500px'}}>
                 <CardHeader 
                     avatar={
-                        <Avatar src={avatar_url} alt={name} />    
+                        <Avatar style={{width: '100px', height: '100px'}} src={avatar_url} alt={name} />    
                     }
-                    title={name}
+                    title={`${name} (${login})`}
                     subheader={location}
                 />
-                <p>{`Name: ${name}`}</p>
-                <p>{`Location: ${location}`}</p>
-                <p>{`Followers: ${followers}`}</p>
-                <p>{`Following: ${following}`}</p>
-            </Card>
+                <CardContent>
+                    { bio && (
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        {bio}
+                        <Divider style={{margin: '8px 0'}} />
+                    </Typography>
+                    )}
+                    { blog && (
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        {blog}
+                    </Typography>
+                    )}
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        {`Followers: ${followers}`}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        {`Following: ${following}`}
+                    </Typography>
+                </CardContent>
+                { (this.state.followers.length > 0) && <FollowersCollapse handleExpand={this.handleExpand} expanded={this.state.expanded} followers={this.state.followers} /> }
+            </Card> 
+            : null
         )
     }
 }
