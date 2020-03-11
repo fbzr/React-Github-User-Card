@@ -7,7 +7,7 @@ const styles = theme => ({
         cursor: 'pointer',
         transition: 'background-color 300ms',
         '&:hover': {
-            backgroundColor: theme.palette.primary.light
+            backgroundColor: theme.palette.success.light
         }
     }
 })
