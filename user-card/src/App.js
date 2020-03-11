@@ -19,7 +19,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <Grid container style={{marginTop: '50px'}} direction='column' alignItems='center'>
+      <Grid container style={{marginTop: '30px'}} direction='column' alignItems='center'>
         <Grid item style={{maxWidth: '500px'}}>
           <Typography variant='h1'>Github Info</Typography>
           <SearchUserForm handleSearch={this.handleSearch} />

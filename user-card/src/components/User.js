@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Card, CardHeader, CardContent, Avatar, Typography, Divider, Collapse, CardActions, IconButton } from '@material-ui/core';
+import { Card, CardHeader, Grid, CardContent, Avatar, Typography, Divider } from '@material-ui/core';
 import FollowersCollapse from './FollowersCollapse';
 import axios from 'axios';
 
@@ -12,10 +12,6 @@ export default class User extends Component {
             expanded: false
         }
     }
-    
-    componentDidMount() {
-        console.log(this.props.user)
-    }
 
     async componentDidUpdate(prevProps, prevState) {
         if( prevProps !== this.props ) {
@@ -23,6 +19,7 @@ export default class User extends Component {
                 const res = await axios.get(`https://api.github.com/users/${this.props.user.login}/followers`);
                 this.setState({
                     ...this.state,
+                    expanded: false,
                     followers: res.data
                 })
             } catch(err) {
@@ -41,7 +38,7 @@ export default class User extends Component {
     render() {
         const {name, login, avatar_url, location, followers, following, blog, bio} = this.props.user;
         return ( followers 
-            ? <Card style={{width: '100%'}}>
+            ? <Card style={{width: '100%', marginBottom: '30px'}}>
                 <CardHeader 
                     avatar={
                         <Avatar style={{width: '100px', height: '100px'}} src={avatar_url} alt={name} />    
@@ -51,24 +48,26 @@ export default class User extends Component {
                 />
                 <CardContent>
                     { bio && (
-                    <Fragment>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            {bio}
-                        </Typography>
-                        <Divider style={{margin: '8px 0'}} />
-                    </Fragment>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        {bio}
+                    </Typography>
                     )}
                     { blog && (
                     <Typography variant="body2" color="textSecondary" component="p">
                         {blog}
                     </Typography>
                     )}
+                    <Divider style={{margin: '8px 0'}} />
                     <Typography variant="body2" color="textSecondary" component="p">
                         {`Followers: ${followers}`}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
                         {`Following: ${following}`}
                     </Typography>
+                    <Fragment>
+                        <img style={{maxWidth: '100%', marginTop: '8px'}} src={`http://ghchart.rshah.org/${login}`} alt="2016rshah's Github chart" />
+                        <Divider style={{margin: '8px 0'}} />
+                    </Fragment>
                 </CardContent>
                 { (this.state.followers.length > 0) && <FollowersCollapse changeUser={this.props.changeUser} handleExpand={this.handleExpand} expanded={this.state.expanded} followers={this.state.followers} /> }
             </Card> 
