@@ -1,7 +1,18 @@
 import React, { Component } from 'react';
-import { ListItem, ListItemAvatar, Avatar, ListItemText, Typography } from '@material-ui/core';
+import { ListItem, ListItemAvatar, Avatar, ListItemText, Typography, withStyles } from '@material-ui/core';
 
-export default class Follower extends Component {
+ 
+const styles = theme => ({
+    listItem: {
+        cursor: 'pointer',
+        transition: 'background-color 300ms',
+        '&:hover': {
+            backgroundColor: theme.palette.primary.light
+        }
+    }
+})
+
+class Follower extends Component {
     handleChangeUser = () => {
         this.props.changeUser(this.props.follower.login);
     }
@@ -9,10 +20,9 @@ export default class Follower extends Component {
     // this component receives the follower user data via props
     render() {
         const { login, avatar_url } = this.props.follower;
+        
         return (
-            <ListItem style={{
-                cursor: 'pointer'
-            }} onClick={this.handleChangeUser} key={login} alignItems="flex-start">
+            <ListItem className={this.props.classes.listItem} onClick={this.handleChangeUser} key={login} alignItems="flex-start">
                 <ListItemAvatar>
                     <Avatar alt={login} src={avatar_url} />
                 </ListItemAvatar>
@@ -27,3 +37,5 @@ export default class Follower extends Component {
         )
     }
 }
+
+export default withStyles(styles)(Follower);
